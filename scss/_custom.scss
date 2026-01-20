@@ -2,12 +2,21 @@
 // Option A: Include all of Bootstrap
 
 // Include any default variable overrides here (though functions won’t be available)
+
+    // Colors //
+
 $primary: #785A4C;
 $secondary: #24BA6F;
+
+    // Fonts //
+
+$font-family-base: 'Crimson Text', serif, 12px;
+$font-family-heading: 'Crimson Text', serif, bold, 16px;
 
 @import "../node_modules/bootstrap/scss/bootstrap";
 
 // Then add additional custom code here
+
 
 .my-button {
   background-color: $secondary;
@@ -20,4 +29,80 @@ $secondary: #24BA6F;
   &:hover {
     background-color: darken($primary, 10%);
   }
+}
+
+/* Banner under Header */
+
+.hero-scene {
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-scene::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("../Images/World Map.jpg");
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.2);
+    z-index: 0;
+}
+
+.hero-scene-content {
+    position: relative;
+    z-index: 1;
+
+    min-height: 35vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* centrage vertical */
+    align-items: center;     /* centrage horizontal */
+
+    text-align: center;      /* texte centré */
+}
+
+/* Desktop */
+@media (min-width: 992px) {
+    .hero-scene {
+        min-height: 60vh;
+    }
+
+    .hero-scene-content {
+        min-height: 60vh;
+    }
+
+    .hero-scene::before {
+        background-image: url("../Images/World Map.jpg");
+    }
+}
+
+// Title Banner //
+
+.title-banner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 120px; /* Fixed height for mobile and desktop */
+    background-image: url("../Images/BannièreTitre.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.title-banner-text {
+    color: black;
+    text-align: center;
+    font-size: 22px;
+    margin-top: 45px;
+}
+
+/* Desktop */
+@media (min-width: 992px) {
+    .title-banner {
+        height: 120px; /* Keep same height on desktop */
+        
+    }
 }
