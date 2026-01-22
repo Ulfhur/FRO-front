@@ -8,6 +8,8 @@
 $primary: #785A4C;
 $secondary: #24BA6F;
 
+
+
     // Fonts //
 
 $font-family-base: 'Crimson Text', serif, 12px;
@@ -97,12 +99,81 @@ $font-family-heading: 'Crimson Text', serif, bold, 16px;
     text-align: center;
     font-size: 22px;
     margin-top: 45px;
+    
 }
 
-/* Desktop */
+        /* Desktop */
 @media (min-width: 992px) {
     .title-banner {
         height: 120px; /* Keep same height on desktop */
         
+    }
+}
+
+// Stylish Container for Content Sections //
+
+.stylish-container {
+    background-color: #785A4C; /* Primary color */
+    color: white;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-bottom: 20px;
+}
+
+.stylish-container-image {
+    width: 120px;
+    height: 160px;
+    margin: 12px;
+    border-color: white;
+    border-width: 2px;
+    border-radius: 8px;
+    border-style: solid;
+}
+
+.stylish-container-small-text {
+    width: 160px;
+    height: 60px;
+    font-size: 14px;
+    margin: 8px;
+}
+
+.stylish-container-bubble-text {
+    background-color: #d9d9d9;
+    color: black;
+    text-align: center;
+    font-size: 12px;
+    padding: 6px;
+    border-radius: 8px;
+    justify-content: center;
+}
+
+    // Desktop stylish container adjustments //
+
+@media (min-width: 768px) {
+    .stylish-container {
+        padding: 30px;
+        margin-left: 40px;
+        margin-right: 40px;
+    }
+
+    .stylish-container-image {
+        width: 150px;
+        height: 200px;
+        margin: 16px;
+    }
+
+    .stylish-container-small-text {
+        width: 200px;
+        height: 80px;
+        font-size: 16px;
+        margin: 12px;
+    }
+
+    .stylish-container-bubble-text {
+        font-size: 14px;
+        padding: 8px;
     }
 }
