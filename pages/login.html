@@ -8,7 +8,7 @@
   </div>
 </div>
 <div class="form-container mt-4 mb-4">
-    <form>
+    <form id="formLogin" action="" method="post">
         <div class="mb-3">
           <label for="EmailInput" class="form-label">Email</label>
           <input type="email" class="form-control" id="EmailInput" placeholder="Entrez votre adresse mail" name="Email"> 
@@ -22,6 +22,7 @@
         </div>
         <div class="text-center pt-2">
             <button type="submit" class="btn btn-secondary">Connexion</button>
+            <p class="text-danger text-center mt-2" id="loginError"></p>
         </div>
     </form>
 </div>
