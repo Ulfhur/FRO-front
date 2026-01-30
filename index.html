@@ -10,12 +10,23 @@
     <title>Document</title>
 </head>
 <body>
-    <header>
-        <nav class="navbar bg-primary">
-            <div class="container-fluid">
-                <span class="navbar-brand mb-0 h1">
-                    <i class="bi bi-list fs-1"></i>
+    <header id="main-header" class="header-logged">
+        <div class="collapse" id="header" data-bs-theme="primary">
+            <div class="bg-primary p-4">
+                <h1 class="text-body-emphasis h4">Menu</h1>
+                <span id="logoutBtn" class="text-body-secondary" style="cursor:pointer">Se déconnecter
+                    <i class="bi bi-door-open"></i>
                 </span>
+            </div>
+        </div>
+        <nav class="navbar navbar-dark bg-primary">
+            <div class="container-fluid">
+                <button class="navbar-toggler" 
+                    type="button" data-bs-toggle="collapse" 
+                    data-bs-target="#header" aria-controls="header" 
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
             </div>
         </nav>
     </header>
@@ -30,6 +41,8 @@
     </footer>
 
     <script type="module" src="js/Router.js"></script>
+    <script src="js/script/script.js" defer></script>
+    <script type="module" src="js/auth/logout.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

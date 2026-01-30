@@ -1,4 +1,5 @@
 import { loginUser } from "./auth.js";
+import { updateHeader } from "./auth.js";
 
 export function initLogin() {
     
@@ -26,6 +27,9 @@ export function initLogin() {
 
             localStorage.setItem("token", result.token);
 
+            // Update header //
+            updateHeader();
+           
             // Redirection to "profile" page //
 
             window.location.hash = "#/profile";

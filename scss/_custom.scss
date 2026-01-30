@@ -19,6 +19,9 @@ $font-family-heading: 'Crimson Text', serif, bold, 16px;
 
 // Then add additional custom code here
 
+.header-logged {
+    display: none;
+}
 
 .my-button {
   background-color: $secondary;
@@ -255,4 +258,113 @@ $font-family-heading: 'Crimson Text', serif, bold, 16px;
 
 .character-window-text li {
     margin: 4px 0;
+}
+
+// All the CSS for Character Creation Window // 
+
+#createChar-window {
+  width: 460px;
+  height: 520px;
+  display: flex;
+  flex-direction: column;
+  background: #d9d9d9;
+  border-radius: 8px;
+  margin: 40px auto;
+}
+
+/* Haut : personnage */
+#character-zone {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#character {
+  position: relative;
+  width: 180px;
+  height: 340px;
+}
+
+#base-character {
+  width: 100%;
+}
+
+/* Bas : inventaire */
+#inventory-zone {
+  padding: 10px;
+  border-top: 2px solid #bbb;
+}
+
+#categories {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 8px;
+}
+
+.category {
+  background: #aaa;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.category.active {
+  background: #666;
+  color: white;
+}
+
+/* Items */
+#inventory {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.item {
+  width: 80px;
+  height: 60px;
+  cursor: grab;
+}
+
+.slot {
+  position: absolute;
+  pointer-events: none; /* important */
+}
+
+/* Ajuste à ton image */
+.slot[data-slot="helmet"] {
+  top: 0;
+  left: 30px;
+  width: 60px;
+  height: 50px;
+}
+
+.slot[data-slot="armor"] {
+  top: 108px;
+  left: 50px;
+  width: 70px;
+  height: 80px;
+}
+
+.slot[data-slot="legs"] {
+  top: 148px;
+  left: 50px;
+  width: 60px;
+  height: 90px;
+}
+
+.slot[data-slot="weapon"] {
+  top: 112px;
+  left: 0px;
+  width: 40px;
+  height: 100px;
+}
+
+.slot[data-slot="shield"] {
+  top: 120px;
+  left: 90px;
+  width: 40px;
+  height: 100px;
 }

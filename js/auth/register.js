@@ -8,7 +8,7 @@ export function initRegister() {
     const form = document.getElementById("registerForm");
     const btnRegister = document.getElementById("btnRegister");
 
-    if (!form) return; // sécurité SPA
+    if (!form) return;
 
     inputMail.addEventListener("input", validateForm);
     inputPseudo.addEventListener("input", validateForm);

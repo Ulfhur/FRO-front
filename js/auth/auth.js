@@ -43,3 +43,44 @@ export async function loginUser(email, password) {
 
     return response.json();
 }
+
+// Function to log out a user //
+
+export function logoutUser() {
+
+    // Erase current token // 
+
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+
+    window.location.href="#/";
+}
+
+
+
+// Function to check if any token is in the local storage // 
+    // If token founded => show hearder //
+
+const headerNavEl = document.getElementById("main-header");
+
+if (headerNavEl) {
+    if (localStorage.getItem("token")) {
+        headerNavEl.classList.remove("header-logged");
+    } else {
+        headerNavEl.classList.add("header-logged");
+    }
+}
+
+// Function to refresh header after a login // 
+
+export function updateHeader() {
+    const headerNavEl = document.getElementById("main-header");
+    if (!headerNavEl) return;
+
+    if (localStorage.getItem("token")) {
+        headerNavEl.classList.remove("header-logged");
+    } else {
+        headerNavEl.classList.add("header-logged");
+    }
+}
+
