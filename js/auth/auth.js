@@ -2,7 +2,7 @@
 
 export async function registerUser(email, username, password) {
 
-    const response = await fetch("http://127.0.0.1:8000/api/register", {
+    const response = await fetch("http://localhost:8000/api/register", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -15,8 +15,9 @@ export async function registerUser(email, username, password) {
     });
 
     if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Erreur lors de l'inscription");
+        const errorData = await response.json();
+        console.error(errorData);  
+        throw new Error(errorData.error || "Erreur lors de l'inscription");
     }
 
     return response.json();
@@ -26,7 +27,7 @@ export async function registerUser(email, username, password) {
 
 export async function loginUser(email, password) {
 
-    const response = await fetch("http://127.0.0.1:8000/api/login_check", {
+    const response = await fetch("http://localhost:8000/api/login_check", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

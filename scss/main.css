@@ -12189,19 +12189,66 @@ textarea.form-control-lg {
   margin: 4px 0;
 }
 
-#createChar-window {
-  width: 460px;
-  height: 520px;
+.character-display-container {
+  position: relative;
+  width: 100%;
+  height: 50%;
   display: flex;
-  flex-direction: column;
-  background: #d9d9d9;
-  border-radius: 8px;
-  margin: 40px auto;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Haut : personnage */
-#character-zone {
+.base-body {
+  position: relative;
+  z-index: 1;
+}
+
+.equip-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+  z-index: 2;
+}
+
+#createChar-window {
+  display: flex;
+  width: 100%;
+}
+
+#character-creation-window {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  overflow: hidden;
+}
+
+#equipment-window {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+}
+
+@media (max-width: 900px) {
+  #equipment-window {
+    width: 40%;
+    max-width: 40%;
+  }
+}
+#character-background {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  aspect-ratio: 1/1;
+  background: url(/Images/creationBackground.jpg) center/cover no-repeat;
+  border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12209,84 +12256,112 @@ textarea.form-control-lg {
 
 #character {
   position: relative;
-  width: 180px;
-  height: 340px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#base-character {
+#character img {
+  display: block;
+  max-width: 220px;
   width: 100%;
+  height: auto;
 }
 
-/* Bas : inventaire */
-#inventory-zone {
-  padding: 10px;
-  border-top: 2px solid #bbb;
+.item-on-character {
+  position: absolute;
+  width: 40px; /* adapte selon ton design */
+  height: 40px;
+  transition: left 0.1s, top 0.1s;
 }
 
 #categories {
   display: flex;
-  justify-content: space-around;
-  margin-bottom: 8px;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 10px;
 }
 
 .category {
   background: #aaa;
+  color: black;
+  padding: 8px 12px;
+  border-radius: 12px;
   border: none;
-  padding: 6px 10px;
-  border-radius: 4px;
   cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.category:hover {
+  background: #888;
+  transform: translateY(-2px);
 }
 
 .category.active {
   background: #666;
   color: white;
+  border-radius: 12px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
-/* Items */
 #inventory {
   display: flex;
-  justify-content: center;
-  gap: 10px;
+  flex-wrap: wrap;
+  width: 100%;
+  min-width: 0;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
 }
 
 .item {
+  padding-top: 20px;
   width: 80px;
-  height: 60px;
+  height: 80px;
   cursor: grab;
 }
 
 .slot {
   position: absolute;
-  pointer-events: none; /* important */
+  pointer-events: none;
 }
 
-/* Ajuste à ton image */
 .slot[data-slot=helmet] {
-  top: 0;
-  left: 30px;
-  width: 60px;
-  height: 50px;
+  bottom: 160px;
+  left: 50px;
+  width: 120px;
+  height: 100px;
+  z-index: 3;
 }
 
 .slot[data-slot=armor] {
-  top: 108px;
-  left: 50px;
-  width: 70px;
+  top: 110px;
+  left: 70px;
+  width: 80px;
   height: 80px;
+  z-index: 2;
 }
 
 .slot[data-slot=legs] {
-  top: 148px;
-  left: 50px;
-  width: 60px;
-  height: 90px;
+  top: 156px;
+  left: 68px;
+  width: 80px;
+  height: auto;
+  z-index: 1;
 }
 
 .slot[data-slot=weapon] {
-  top: 112px;
-  left: 0px;
-  width: 40px;
+  top: 80px;
+  left: 10px;
+  width: 80px;
   height: 100px;
+  z-index: 4;
 }
 
 .slot[data-slot=shield] {
@@ -12294,6 +12369,23 @@ textarea.form-control-lg {
   left: 90px;
   width: 40px;
   height: 100px;
+  z-index: 5;
+}
+
+#create-char-btn {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: black;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#create-char-btn:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
 }
 
 html {

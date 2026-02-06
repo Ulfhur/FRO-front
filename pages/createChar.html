@@ -1,24 +1,8 @@
 <div id="createChar-window">
-
-  <!-- Zone personnage -->
-  <div id="character-zone">
-    <div id="character">
-      <img src="/Images/perso.png" id="base-character" alt="Base character">
-
-        <div class="slot" data-slot="helmet"></div>
-        <div class="slot" data-slot="armor"></div>
-        <div class="slot" data-slot="legs"></div>
-        <div class="slot" data-slot="weapon"></div>
-        <div class="slot" data-slot="shield"></div>
-    </div>
-    </div>
-</div>
-
-  <!-- Zone inventaire -->
-  <div id="inventory-zone">
-
-    <!-- Catégories -->
-    <div id="categories">
+  <!-- GAUCHE : ÉQUIPEMENT -->
+  <div id="equipment-window">
+    <!-- Categories -->
+    <div id="categories" class="mt-2">
       <button class="category active" data-category="helmet">Casque</button>
       <button class="category" data-category="armor">Armure</button>
       <button class="category" data-category="legs">Jambières</button>
@@ -27,12 +11,47 @@
     </div>
 
     <!-- Items -->
+
     <div id="inventory">
-      <img src="/Images/casquePerso.png" class="item" data-category="helmet">
-      <img src="/Images/armurePerso.png" class="item" data-category="armor">
-      <img src="/Images/jambierePerso.png" class="item" data-category="legs">
-      <img src="/Images/epeePerso.png" class="item" data-category="weapon">
-      <img src="/Images/bouclierPerso.png" class="item" data-category="shield">
+      <img src="/Images/casquePerso.png" class="item" data-category="helmet" data-id="1" alt="Character helmet 1">
+      <img src="/Images/armurePerso.png" class="item" data-category="armor" data-id="2" alt="Character armor 1">
+      <img src="/Images/jambierePerso.png" class="item" data-category="legs" data-id="3" alt="Character legs 1">
+      <img src="/Images/epeePerso.png" class="item" data-category="weapon" data-id="4" alt="Character sword 1">
+      <img src="/Images/bouclierPerso.png" class="item" data-category="shield" data-id="5" alt="Character shield 1">
+    </div>
+  </div>
+
+  <!-- Character -->
+
+  <div id="character-creation-window">
+    <div id="character-background">
+      <div id="character">
+        <img src="/Images/perso.png" alt="Base character">
+        
+        <div class="slot" data-slot="helmet"></div>
+        <div class="slot" data-slot="armor"></div>
+        <div class="slot" data-slot="legs"></div>
+        <div class="slot" data-slot="weapon"></div>
+        <div class="slot" data-slot="shield"></div>
+      </div>
+    </div>
+
+    <div class="title-banner">
+      <input 
+        type="text" 
+        id="character-name-input" 
+        class="title-banner-text" 
+        placeholder="Entrez le nom" 
+        maxlength="64"
+      >
+    </div>
+    <div>
+      <button id="create-char-btn">Créer</button>
     </div>
   </div>
 </div>
+
+
+
+
+

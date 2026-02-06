@@ -2,64 +2,64 @@ import Route from "./Route.js";
 import { allRoutes, websiteName } from "./allRoutes.js";
 import { initLogin } from "./auth/login.js";
 import { initRegister } from "./auth/register.js";
+import { initCharacterCreator, loadCharacterDetails, loadUserCharacter } from "./script/script.js";
 
-// Création d'une route pour la page 404 (page introuvable)
 const route404 = new Route("404", "Page introuvable", "/pages/404.html");
 
-// Fonction pour récupérer la route correspondant à une URL donnée
 const getRouteByUrl = (url) => {
   let currentRoute = null;
-  // Parcours de toutes les routes pour trouver la correspondance
   allRoutes.forEach((element) => {
     if (element.url == url) {
       currentRoute = element;
     }
   });
-  // Si aucune correspondance n'est trouvée, on retourne la route 404
-  if (currentRoute != null) {
-    return currentRoute;
-  } else {
-    return route404;
-  }
+  return currentRoute != null ? currentRoute : route404;
 };
 
-// Fonction pour charger le contenu de la page
 const LoadContentPage = async () => {
-  const path = window.location.hash.slice(1) || "/";
-  // Récupération de l'URL actuelle
-  const actualRoute = getRouteByUrl(path);
-  // Récupération du contenu HTML de la route
-  const html = await fetch(actualRoute.pathHtml).then((data) => data.text());
-  // Ajout du contenu HTML à l'élément avec l'ID "main-page"
-  document.getElementById("main-page").innerHTML = html;
+  let path = window.location.hash.slice(1) || "/";
 
-  if (actualRoute.url === "/register") {
-    initRegister();
-}
-  if (actualRoute.url === "/login") {
-    initLogin();
+  // Gestion du chemin dynamique pour les détails
+  let routePathToSearch = path;
+  if (path.startsWith("/charDetails/")) {
+    routePathToSearch = "/charDetails";
   }
-  
 
-  // Changement du titre de la page
+  const actualRoute = getRouteByUrl(routePathToSearch);
+  
+  // Changement du titre (ON LE MET ICI, à l'intérieur de la fonction)
   document.title = actualRoute.title + " - " + websiteName;
+
+  // Récupération et injection du HTML
+  try {
+    const response = await fetch(actualRoute.pathHtml);
+    const html = await response.text();
+    document.getElementById("main-page").innerHTML = html;
+
+    // --- Déclenchement des scripts ---
+    if (actualRoute.url === "/register") initRegister();
+    if (actualRoute.url === "/login") initLogin();
+    if (actualRoute.url === "/createChar") initCharacterCreator();
+    if (actualRoute.url === "/profile") loadUserCharacter();
+    
+    // Si on est sur les détails (on vérifie le path réel avec l'ID)
+    if (path.startsWith("/charDetails/")) {
+      loadCharacterDetails();
+    }
+  } catch (error) {
+    console.error("Erreur lors du chargement de la page:", error);
+  }
 };
 
-// Fonction pour gérer les événements de routage (clic sur les liens)
-const routeEvent = (event) => {
+// Événements
+window.onpopstate = LoadContentPage;
+window.addEventListener("hashchange", LoadContentPage);
+window.route = (event) => {
   event = event || window.event;
   event.preventDefault();
-  // Mise à jour de l'URL dans l'historique du navigateur
   window.history.pushState({}, "", event.target.href);
-  // Chargement du contenu de la nouvelle page
   LoadContentPage();
 };
 
-// Gestion de l'événement de retour en arrière dans l'historique du navigateur
-window.onpopstate = LoadContentPage;
-window.addEventListener("hashchange", LoadContentPage); // pour hash direct
-
-// Assignation de la fonction routeEvent à la propriété route de la fenêtre
-window.route = routeEvent;
-// Chargement du contenu de la page au chargement initial
+// Premier chargement
 LoadContentPage();

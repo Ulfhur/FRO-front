@@ -32,7 +32,7 @@ export function initLogin() {
            
             // Redirection to "profile" page //
 
-            window.location.hash = "#/profile";
+            window.location.hash = "/profile";
 
         } catch (error) {
             
