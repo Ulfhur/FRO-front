@@ -494,14 +494,25 @@ async function loadMessages(type) {
       const content = msg.content || "";
       const date = msg.createdAt ? new Date(msg.createdAt).toLocaleString() : "";
 
-      list.innerHTML += `
-        <div class="list-group-item list-group-item-action bg-light text-dark mb-2 rounded">
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1 fw-bold">${title} <small class="text-muted">(${contactLabel})</small></h5>
-            <small class="text-muted">${date}</small>
-          </div>
-          <p class="mb-1">${content}</p>
-        </div>`;
+      const item = document.createElement('div');
+      item.className = "list-group-item list-group-item-action bg-light text-dark mb-2 rounded";
+      item.style.cursor = "pointer";
+      item.innerHTML = `
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1 fw-bold">${title} <small class="text-muted">(${contactLabel})</small></h5>
+          <small class="text-muted">${date}</small>
+        </div>
+        <p class="mb-1 text-truncate">${content}</p>`;
+
+      item.addEventListener('click', () => {
+        document.getElementById('modalMessageTitle').textContent = title;
+        document.getElementById('modalMessageInfo').textContent = `${contactLabel} - ${date}`;
+        document.getElementById('modalMessageBody').textContent = content;
+        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('messageModal'));
+        modal.show();
+      });
+
+      list.appendChild(item);
     });
 
     container.appendChild(list);
