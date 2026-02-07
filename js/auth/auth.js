@@ -52,7 +52,6 @@ export function logoutUser() {
     // Erase current token // 
 
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
 
     window.location.href="#/";
 }

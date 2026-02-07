@@ -56,20 +56,18 @@ export function initRegister() {
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        await registerUser(
-            inputMail.value,
-            inputPseudo.value,
-            inputPassword.value
-        );
-          // Dans ton eventListener de soumission de formulaire
         try {
-            const result = await registerUser(email, username, password);
+            const result = await registerUser(
+                inputMail.value,
+                inputPseudo.value,
+                inputPassword.value
+            );
             
             // 1. On stocke le token reçu
             localStorage.setItem("token", result.token);
             
             // 2. On informe l'utilisateur
-            alert("Inscription réussie ! Bienvenue dans la taverne.");
+            alert("Inscription réussie ! Bienvenue dans Hero Tavern.");
 
             // 3. On redirige vers le profil ou la création de perso
             window.location.hash = "/profile"; 

@@ -12388,6 +12388,75 @@ textarea.form-control-lg {
   transform: translateY(-2px);
 }
 
+.navbar-messaging {
+  display: flex;
+  flex-direction: row;
+  background-color: #543D33;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 18px;
+  border-radius: 6px;
+}
+
+.navbar-messaging .navbar-toggler {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: white;
+  position: relative;
+}
+
+.navbar-messaging-title {
+  position: absolute;
+  margin: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.collapse-messaging {
+  background-color: #543D33;
+  margin: 0 10px 10px 10px;
+  padding: 18px;
+  border-radius: 6px;
+}
+
+.navbar-messaging .bi-chevron-down {
+  transition: transform 0.3s ease-in-out;
+  display: inline-block;
+}
+
+.navbar-messaging .navbar-toggler:not(.collapsed) .bi-chevron-down {
+  transform: rotate(180deg);
+}
+
+.gentle-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.gentle-container-img {
+  width: 74px;
+  height: 74px;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
+.gentle-container-text {
+  margin: 0;
+  flex: 1;
+  text-align: center;
+}
+
 html {
   position: relative;
   min-height: 100%;

@@ -365,3 +365,154 @@ export async function loadCharacterDetails() {
         charContainer.innerHTML = `<p class="text-danger">Impossible de charger ce personnage.</p>`;
     }
 }
+
+// FUNCTION TO INITIALIZE MESSAGING PAGE //
+
+export function initMessaging() {
+  const form = document.getElementById('messageForm');
+  
+  // Charger les messages reçus et envoyés à l'initialisation
+  loadMessages('received');
+  loadMessages('sent');
+
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const recipientInput = document.getElementById('recipientInput');
+    const titleInput = document.getElementById('messageTitle');
+    const messageInput = document.getElementById('messageText');
+    
+    if (!recipientInput || !messageInput || !titleInput) return;
+
+    const recipient = recipientInput.value.trim();
+    const title = titleInput.value.trim();
+    const message = messageInput.value.trim();
+    
+    // On vérifie simplement si le token existe
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      alert("Erreur : Vous devez être connecté pour envoyer un message.");
+      window.location.hash = "#/login"; // Optionnel : redirection si pas de token
+      return;
+    }
+
+    if (!recipient || !message || !title) {
+      alert("Veuillez remplir tous les champs (Destinataire, Sujet, Message).");
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:8000/api/message', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json',
+        },
+        // On n'envoie plus senderUsername, le serveur le déduira du Bearer Token
+        body: JSON.stringify({
+          title: title,
+          content: message,
+          recipientUsername: recipient
+        })
+      });
+
+      if (response.ok) {
+        alert("Message envoyé avec succès !");
+        form.reset();
+        // Rafraîchir la liste des messages envoyés
+        loadMessages('sent');
+    
+      } else {
+        const data = await response.json();
+        alert("Erreur lors de l'envoi : " + (data.error || data.message || response.statusText));
+      }
+
+    } catch (error) {
+      console.error("Erreur envoi message:", error);
+      alert("Une erreur est survenue lors de l'envoi du message.");
+    }
+  });
+}
+
+// Fonction pour charger et afficher les messages
+async function loadMessages(type) {
+  const isReceived = type === 'received';
+  const url = 'http://localhost:8000/api/message'; // L'API renvoie tout, on filtre après
+
+  const containerId = isReceived 
+    ? 'navbarToggleExternalContentReceived' 
+    : 'navbarToggleExternalContentSent';
+
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) throw new Error("Erreur chargement messages");
+
+    const allMessages = await response.json();
+    
+    let currentUsername = null;
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+        const payload = JSON.parse(atob(base64));
+        currentUsername = payload.username;
+      } catch (e) {}
+    }
+
+    const messages = allMessages;
+
+    container.innerHTML = ''; // Vider le contenu placeholder
+
+    if (!messages || messages.length === 0) {
+      container.innerHTML = `<div class="p-4 text-white">Aucun message ${isReceived ? 'reçu' : 'envoyé'}.</div>`;
+      return;
+    }
+
+    const list = document.createElement('div');
+    list.className = 'list-group m-3';
+
+    messages.forEach(msg => {
+      
+      const contactLabel = isReceived 
+        ? `De : ${msg.senderUsername}` 
+        : `À : ${msg.recipientUsername}`;
+
+      const title = msg.title || "Sans titre";
+      const content = msg.content || "";
+      const date = msg.createdAt ? new Date(msg.createdAt).toLocaleString() : "";
+
+      list.innerHTML += `
+        <div class="list-group-item list-group-item-action bg-light text-dark mb-2 rounded">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1 fw-bold">${title} <small class="text-muted">(${contactLabel})</small></h5>
+            <small class="text-muted">${date}</small>
+          </div>
+          <p class="mb-1">${content}</p>
+        </div>`;
+    });
+
+    container.appendChild(list);
+
+  } catch (error) {
+    console.error("Erreur loadMessages:", error);
+    container.innerHTML = `<div class="p-4 text-danger">Impossible de charger les messages.</div>`;
+  }
+}
+
+       
+  
+
+    

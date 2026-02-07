@@ -2,7 +2,7 @@ import Route from "./Route.js";
 import { allRoutes, websiteName } from "./allRoutes.js";
 import { initLogin } from "./auth/login.js";
 import { initRegister } from "./auth/register.js";
-import { initCharacterCreator, loadCharacterDetails, loadUserCharacter } from "./script/script.js";
+import { initCharacterCreator, loadCharacterDetails, loadUserCharacter, initMessaging, } from "./script/script.js";
 
 const route404 = new Route("404", "Page introuvable", "/pages/404.html");
 
@@ -41,6 +41,8 @@ const LoadContentPage = async () => {
     if (actualRoute.url === "/login") initLogin();
     if (actualRoute.url === "/createChar") initCharacterCreator();
     if (actualRoute.url === "/profile") loadUserCharacter();
+    if (actualRoute.url === "/messaging") initMessaging();
+    
     
     // Si on est sur les détails (on vérifie le path réel avec l'ID)
     if (path.startsWith("/charDetails/")) {

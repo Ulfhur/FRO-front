@@ -1,0 +1,71 @@
+<h1 class="text-center mt-4 mb-4">Messagerie</h1>
+
+<!-- Send new message -->
+
+<nav class="navbar-messaging navbar-primary bg-primary">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContentNew" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+      <h1 class="navbar-messaging-title">Nouveau Message</h1>
+      <i class="bi bi-chevron-down h2"></i>
+    </button>
+  </div>
+</nav>
+<div class="collapse-messaging collapse" id="navbarToggleExternalContentNew">
+  <form id="messageForm" action="" method="post">
+    <div class="mb-3">
+      <label for="recipientInput" class="form-label text-white">Destinataire</label>
+      <input type="text" class="form-control" id="recipientInput" placeholder="Pseudo du joueur">
+    </div>
+    <div class="mb-3">
+      <label for="messageTitle" class="form-label text-white">Sujet</label>
+      <input type="text" class="form-control" id="messageTitle" placeholder="Sujet du message">
+    </div>
+    <div class="mb-3">
+      <label for="messageText" class="form-label text-white">Votre message</label>
+      <textarea class="form-control" id="messageText" rows="3" placeholder="Écrivez votre message ici..."></textarea>
+    </div>
+    <div class="text-center pt-2">
+      <button type="submit" class="btn btn-secondary text-white">Envoyer</button>
+    </div>
+  </form>
+</div>
+
+<!-- Recieved messages -->
+
+<nav class="navbar-messaging navbar-primary bg-primary mt-2">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContentReceived" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+      <h1 class="navbar-messaging-title">Reçu(s)</h1>
+      <i class="bi bi-chevron-down h2"></i>
+    </button>
+  </div>
+</nav>
+<div class="collapse-messaging collapse" id="navbarToggleExternalContentReceived" data-bs-theme="$primary">
+  <div class="bg-primary p-4">
+    <h5 class="text-body-emphasis h4">Collapsed content</h5>
+    <span class="text-body-secondary">Toggleable via the navbar brand.</span>
+  </div>
+</div>
+
+<!-- Sent messages -->
+
+<nav class="navbar-messaging navbar-primary bg-primary mt-2 mb-2">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContentSent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+      <h1 class="navbar-messaging-title">Envoyé(s)</h1>
+      <i class="bi bi-chevron-down h2"></i>
+    </button>
+  </div>
+</nav>
+<div class="collapse-messaging collapse" id="navbarToggleExternalContentSent" data-bs-theme="$primary">
+  <div class="bg-primary p-4">
+    <h5 class="text-body-emphasis h4">Collapsed content</h5>
+    <span class="text-body-secondary">Toggleable via the navbar brand.</span>
+  </div>
+</div>
+
+<div class="gentle-container pt-5 pb-5">
+    <img src="/Images/barde.png" alt="Barde" class="gentle-container-img">
+    <p class="gentle-container-text">Conseil avisé de barde ! N’hésitez pas à enjoliver vos textes, quoi de mieux qu’un joli 
+        message tout chaud dans sa boite de réception.  </p>
+</div>
