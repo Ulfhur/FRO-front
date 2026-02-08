@@ -266,9 +266,6 @@ export async function loadUserCharacter() {
             </div>
             <ul class="character-window-text">
                 <li class="fw-bold">${char.name}</li>
-                <li>
-                    <button class="btn btn-sm btn-link text-primary p-0">Modifier</button>
-                </li>
             </ul>
         </div>
     `;
@@ -297,12 +294,18 @@ function getEquipmentImage(type) {
 // FUNCTION TO GET DETAILS OF A SPECIFIC CHARACTER (charDetails page) //
 
 export async function loadCharacterDetails() {
-    const charContainer = document.getElementById('character');
+    
+    const charContainer = document.getElementById('main-edit-character');
     const inventoryContainer = document.getElementById('inventory');
     
-    if (!charContainer || !inventoryContainer) return;
+    if (!charContainer || !inventoryContainer) {
+        console.warn("Containers non trouvés : vérifiez les IDs dans votre HTML.");
+        return;
+    }
+    charContainer.style.width = "400px";
+    charContainer.style.height = "400px";
 
-    // 1. Extraction de l'ID depuis l'URL (#/charDetails/ID)
+    // Get character's ID //
     const hash = window.location.hash;
     const parts = hash.split('/');
     const charId = parts[parts.length - 1];
@@ -320,19 +323,18 @@ export async function loadCharacterDetails() {
 
         const char = await response.json();
 
-        // 2. Affichage du corps du personnage
+        // Set img of base character //
         charContainer.innerHTML = `
-            <img src="/Images/perso.png" alt="Corps" class="base-body">
+            <img src="/Images/perso.png" alt="Corps" class="edit-character">
         `;
 
-        // 3. Affichage de l'équipement visuel (overlays)
+        // Set every equip item on character //
         if (char.equipment && char.equipment.length > 0) {
             char.equipment.forEach(item => {
-                // On utilise tes classes .slot et le data-slot pour le positionnement CSS
-                const imgSrc = getEquipmentImage(item.type); // Ta fonction qui lie type -> image
+                const imgSrc = getEquipmentImage(item.type);
                 const equipHtml = `
                     <img src="${imgSrc}" 
-                         class="slot" 
+                         class="edit-slot" 
                          data-slot="${item.type}" 
                          alt="${item.name}">
                 `;
@@ -340,25 +342,32 @@ export async function loadCharacterDetails() {
             });
         }
 
-        // 4. Affichage de l'inventaire (liste détaillée en dessous ou à côté)
+        // Set the container for equipped stuff //
         inventoryContainer.innerHTML = `
             <div class="p-3 w-100">
-                <h3 class="text-white">${char.name}</h3>
+                <h3>${char.name}</h3>
                 <p class="text-muted">Classe : Aventurier</p>
                 <hr class="text-white">
                 <div class="d-flex flex-wrap gap-2">
                     ${char.equipment.map(item => `
-                        <div class="item-detail-card border p-2 rounded bg-light" style="min-width: 120px;">
+                        <div class="item-detail-card">
                             <small class="d-block text-uppercase fw-bold">${item.type}</small>
                             <span>${item.name}</span>
                         </div>
                     `).join('')}
                 </div>
-                <div class="mt-4">
-                     <a href="#/profile" class="btn btn-sm btn-outline-light">Retour au profil</a>
+                <div class="d-flex flex-wrap gap-2 mt-4">
+                     <a href="#/profile" class="btn btn-sm btn-outline-dark">Retour au profil</a>
+                     <div class="ms-auto" id="comments-btn" style="cursor: pointer;">
+                      <i class="bi bi-chat-left-dots-fill fs-4"></i>
+                    </div>
                 </div>
             </div>
         `;
+
+        document.getElementById('comments-btn')?.addEventListener('click', () => {
+            openCommentsModal(char);
+        });
 
     } catch (error) {
         console.error(error);
@@ -371,7 +380,7 @@ export async function loadCharacterDetails() {
 export function initMessaging() {
   const form = document.getElementById('messageForm');
   
-  // Charger les messages reçus et envoyés à l'initialisation
+
   loadMessages('received');
   loadMessages('sent');
 
@@ -395,7 +404,7 @@ export function initMessaging() {
 
     if (!token) {
       alert("Erreur : Vous devez être connecté pour envoyer un message.");
-      window.location.hash = "#/login"; // Optionnel : redirection si pas de token
+      window.location.hash = "#/login";
       return;
     }
 
@@ -411,7 +420,6 @@ export function initMessaging() {
           'Authorization': 'Bearer ' + token,
           'Content-Type': 'application/json',
         },
-        // On n'envoie plus senderUsername, le serveur le déduira du Bearer Token
         body: JSON.stringify({
           title: title,
           content: message,
@@ -437,10 +445,11 @@ export function initMessaging() {
   });
 }
 
-// Fonction pour charger et afficher les messages
+// LOAD ALL MESSAGES //
+
 async function loadMessages(type) {
   const isReceived = type === 'received';
-  const url = 'http://localhost:8000/api/message'; // L'API renvoie tout, on filtre après
+  const url = 'http://localhost:8000/api/message';
 
   const containerId = isReceived 
     ? 'navbarToggleExternalContentReceived' 
@@ -474,7 +483,7 @@ async function loadMessages(type) {
 
     const messages = allMessages;
 
-    container.innerHTML = ''; // Vider le contenu placeholder
+    container.innerHTML = '';
 
     if (!messages || messages.length === 0) {
       container.innerHTML = `<div class="p-4 text-white">Aucun message ${isReceived ? 'reçu' : 'envoyé'}.</div>`;
@@ -523,7 +532,276 @@ async function loadMessages(type) {
   }
 }
 
-       
-  
+// Load user informations //
 
+export async function loadUserInfo() {
+    // Les éléments de ta page profil
+    const pseudoEl = document.getElementById("user-pseudo");
+    const emailEl = document.getElementById("user-email");
+    // L'élément de ton header (si tu veux le mettre à jour aussi)
+    const headerUsernameEl = document.getElementById("header-username");
+
+    try {
+        const response = await fetch("http://localhost:8000/api/user/me", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token"),
+                "Content-Type": "application/json"
+            }
+        });
+
+        // Dans ton fetch de loadUserInfo
+        if (!response.ok) {
+            const errorData = await response.json(); 
+            console.log("LE VOICI, LE COUPABLE :", errorData.message); // <--- REGARDE TA CONSOLE F12
+            throw new Error(errorData.message);
+        }
+
+        const user = await response.json();
+
+        // Injection dans le HTML que tu m'as donné
+        if (pseudoEl) pseudoEl.textContent = user.username;
+        if (emailEl) emailEl.textContent = user.mail;
+        
+        // Bonus : on met aussi à jour le header pour la cohérence
+        if (headerUsernameEl) headerUsernameEl.textContent = user.username;
+
+    } catch (error) {
+        console.error("Erreur profil:", error);
+        if (pseudoEl) pseudoEl.textContent = "Utilisateur";
+    }
+}
+
+// Load community characters //
+
+let allCommunityChars = []; // On stocke les données brutes ici
+
+export async function loadCommunityCharacters() {
+    const container = document.getElementById('community-characters-container');
+    if (!container) return;
+
+    try {
+        const response = await fetch('http://localhost:8000/api/character/community', {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        });
+
+        if (!response.ok) throw new Error('Erreur de récupération');
+
+        allCommunityChars = await response.json();
+        
+        // On initialise les écouteurs d'événements pour les filtres
+        initFilters();
+        
+        // Premier affichage
+        renderCharacters(allCommunityChars);
+
+    } catch (error) {
+        console.error("Erreur communauté:", error);
+    }
+}
+
+function initFilters() {
+    const searchInput = document.getElementById('filter-search');
+    const sortSelect = document.getElementById('filter-sort');
+
+    const applyFilters = () => {
+        let filtered = [...allCommunityChars];
+
+        // 1. Recherche par nom de perso OU nom d'utilisateur
+        const search = searchInput.value.toLowerCase();
+        if (search) {
+            filtered = filtered.filter(char => 
+                char.name.toLowerCase().includes(search) || 
+                char.owner.toLowerCase().includes(search)
+            );
+        }
+
+        // 2. Tri
+        const sortBy = sortSelect.value;
+        if (sortBy === 'name') {
+            filtered.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (sortBy === 'comments') {
+            // Trie du plus commenté au moins commenté
+            filtered.sort((a, b) => (b.commentCount || 0) - (a.commentCount || 0));
+        } else {
+            // "Default" ou plus récent (tri par ID décroissant)
+            filtered.sort((a, b) => b.id - a.id);
+        }
+
+        renderCharacters(filtered);
+    };
+
+    searchInput.oninput = applyFilters;
+    sortSelect.onchange = applyFilters;
+}
+
+// Fonction isolée pour dessiner les cartes
+function renderCharacters(chars) {
+    const container = document.getElementById('community-characters-container');
+    container.innerHTML = "";
+
+    if (chars.length === 0) {
+        container.innerHTML = "<p class='text-white-50 text-center w-100'>Aucun héros ne correspond à ces critères...</p>";
+        return;
+    }
+
+    chars.forEach(char => {
     
+        let equipmentHtml = "";
+        const items = char.equipments || char.equipment || [];
+        
+        items.forEach(item => {
+            
+            const type = (typeof item === 'object') ? item.type : item;
+            const imgSrc = getEquipmentImage(type);
+            
+            if (imgSrc) {
+                equipmentHtml += `<img src="${imgSrc}" class="character-window-image equipment-layer" alt="">`;
+            }
+        });
+
+        const charCard = `
+            <div class="character-window position-relative"> 
+                <a href="#/charDetails/${char.id}" class="full-card-link"></a>
+                <div class="character-display-container">
+                    <img src="/Images/perso.png" class="character-window-image base-body" alt="">
+                    ${equipmentHtml}
+                </div>
+                <ul class="character-window-text">
+                    <li class="fw-bold">${char.name}</li>
+                    <li class="text-muted" style="font-size: 11px;">Par: ${char.owner}</li>
+                    ${char.commentCount ? `<li class="text-warning" style="font-size: 10px;"><i class="bi bi-chat-dots"></i> ${char.commentCount} rumeurs</li>` : ''}
+                </ul>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', charCard);
+    });
+}
+
+// Modal for comments and comments functions //
+
+    // Modal //
+    
+export async function openCommentsModal(char) {
+    if (!char || !char.id) {
+        console.error("Données du personnage manquantes.");
+        return;
+    }
+
+    let modalEl = document.getElementById('commentsModal');
+    
+    if (!modalEl) {
+        const modalHtml = `
+            <div class="modal fade" id="commentsModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-dark">
+                        <div class="modal-header text-white">
+                            <h5 class="modal-title text-white">${char.name}</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="comments-list" class="mb-3" style="max-height: 300px; overflow-y: auto;"></div>
+                            <hr>
+                            <form id="comment-form">
+                                <div class="mb-2">
+                                    <label class="form-label small fw-bold">Note :</label>
+                                    <select id="comment-note" class="form-select form-select-sm w-auto">
+                                        <option value="5">5 ★★★★★</option>
+                                        <option value="4">4 ★★★★</option>
+                                        <option value="3">3 ★★★</option>
+                                        <option value="2">2 ★★</option>
+                                        <option value="1">1 ★</option>
+                                    </select>
+                                </div>
+                                <textarea id="comment-content" class="form-control mb-2" placeholder="Partage ce tu penses du personnage..." required></textarea>
+                                <button type="submit" class="btn btn-primary w-100">Partager</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        modalEl = document.getElementById('commentsModal');
+    }
+
+    modalEl.querySelector('.modal-title').textContent = `Taverne - ${char.name}`;
+    loadTavernComments(char.id);
+
+    const form = document.getElementById('comment-form');
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+      
+        const commentData = {
+            content: document.getElementById('comment-content').value,
+            note: document.getElementById('comment-note').value,
+            characterId: char.id // Utilisation de characterId ici
+        };
+
+        const success = await sendCommentToApi(commentData);
+        
+        if (success) {
+            form.reset();
+            loadTavernComments(char.id);
+        } else {
+            alert("La taverne refuse votre message (Vérifiez votre connexion).");
+        }
+    };
+
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    modal.show();
+}
+
+// Load comments //
+
+export async function loadTavernComments(charId) {
+    const list = document.getElementById('comments-list');
+    if (!list) return;
+
+    try {
+        const res = await fetch(`http://localhost:8000/api/comment/character/${charId}`, {
+            headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+        });
+        
+        if (!res.ok) throw new Error("Erreur de récupération");
+        
+        const comments = await res.json();
+
+        if (comments.length === 0) {
+            list.innerHTML = `<p class="small text-muted text-center">Le silence règne... Aucune rumeur sur ce héros.</p>`;
+            return;
+        }
+
+        list.innerHTML = comments.map(c => `
+            <div class="p-2 mb-2 bg-light rounded border-bottom">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="fw-bold text-primary" style="font-size: 0.9rem;">${c.authorName}</span>
+                    <span class="text-warning" style="letter-spacing: 2px;">${"★".repeat(c.note || 5)}</span>
+                </div>
+                <p class="mb-0 text-dark" style="font-size: 0.9rem;">${c.content}</p>
+                <small class="text-muted" style="font-size: 0.7rem;">Publié le ${c.dateComment}</small>
+            </div>
+        `).join('');
+    } catch (e) {
+        list.innerHTML = "<p class='text-danger small text-center'>Erreur lors du chargement des rumeurs.</p>";
+    }
+}
+
+// Publish comment //
+
+export async function sendCommentToApi(data) {
+    try {
+        // Suppression du "/new" pour correspondre à ton attribut PHP #[Route('', methods: ['POST'])]
+        const response = await fetch('http://localhost:8000/api/comment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+            body: JSON.stringify(data) 
+        });
+        return response.ok;
+    } catch (error) {
+        console.error("Erreur API:", error);
+        return false;
+    }
+}

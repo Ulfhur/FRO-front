@@ -52,35 +52,44 @@ export function logoutUser() {
     // Erase current token // 
 
     localStorage.removeItem('token');
+    updateHeader();
 
     window.location.href="#/";
 }
 
-
-
-// Function to check if any token is in the local storage // 
-    // If token founded => show hearder //
-
-const headerNavEl = document.getElementById("main-header");
-
-if (headerNavEl) {
-    if (localStorage.getItem("token")) {
-        headerNavEl.classList.remove("header-logged");
-    } else {
-        headerNavEl.classList.add("header-logged");
-    }
-}
-
-// Function to refresh header after a login // 
+// Function to update header (to avoid the need of refresh page to make it appears) // 
 
 export function updateHeader() {
     const headerNavEl = document.getElementById("main-header");
+    const headerUsernameEl = document.getElementById("header-username");
     if (!headerNavEl) return;
 
-    if (localStorage.getItem("token")) {
-        headerNavEl.classList.remove("header-logged");
+    const token = localStorage.getItem("token");
+
+    if (token) {
+        // Affiche le header
+        headerNavEl.classList.remove("header-logged"); 
+        
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            // Lexik stocke l'identifiant (email) dans 'username'
+            const userIdentifier = payload.username || "Joueur";
+            
+            if (headerUsernameEl) {
+                // On peut nettoyer l'email pour n'afficher que la partie avant le @ 
+                // ou laisser l'email entier pour l'instant
+                headerUsernameEl.textContent = userIdentifier.split('@')[0]; 
+            }
+        } catch (e) {
+            console.error("Erreur décodage token:", e);
+            localStorage.removeItem("token");
+            headerNavEl.classList.add("header-logged");
+        }
     } else {
+        // Cache le header
         headerNavEl.classList.add("header-logged");
+        if (headerUsernameEl) headerUsernameEl.textContent = "Menu";
     }
 }
-
+// Initialize header state immediately
+updateHeader();
