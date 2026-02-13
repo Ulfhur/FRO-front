@@ -11992,7 +11992,8 @@ textarea.form-control-lg {
   cursor: pointer;
 }
 .my-button:hover {
-  background-color: rgb(88.7755102041, 66.5816326531, 56.2244897959);
+  background-color: #25B89A;
+  transform: scale(1.1);
 }
 
 /* Banner under Header */
@@ -12393,9 +12394,9 @@ textarea.form-control-lg {
 }
 
 .slot[data-slot=shield] {
-  top: 120px;
-  left: 90px;
-  width: 40px;
+  top: 110px;
+  left: 110px;
+  width: 90px;
   height: 100px;
   z-index: 5;
 }
@@ -12544,9 +12545,9 @@ textarea.form-control-lg {
 }
 
 .edit-slot[data-slot=shield] {
-  top: 30%;
-  left: 22%;
-  width: 10%;
+  top: 42%;
+  left: 50%;
+  width: 34%;
   height: auto;
   z-index: 5;
 }

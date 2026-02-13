@@ -37,15 +37,15 @@ const LoadContentPage = async () => {
     document.getElementById("main-page").innerHTML = html;
 
     // --- Déclenchement des scripts ---
-    if (actualRoute.url === "/register") initRegister();
-    if (actualRoute.url === "/login") initLogin();
-    if (actualRoute.url === "/createChar") initCharacterCreator();
-    if (actualRoute.url === "/profile") {
+    if (path === "/register") initRegister();
+    if (path === "/login") initLogin();
+    if (path === "/createChar") initCharacterCreator();
+    if (path === "/profile") {
       await loadUserInfo();
       await loadUserCharacter();
       await loadCommunityCharacters();
     }
-    if (actualRoute.url === "/messaging") initMessaging();
+    if (path === "/messaging") initMessaging();
     
     
     // Si on est sur les détails (on vérifie le path réel avec l'ID)

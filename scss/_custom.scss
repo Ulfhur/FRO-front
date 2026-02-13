@@ -32,7 +32,8 @@ $font-family-heading: 'Crimson Text', serif, bold, 16px;
   cursor: pointer;
 
   &:hover {
-    background-color: darken($primary, 10%);
+    background-color: #25B89A;
+    transform: scale(1.1);
   }
 }
 
@@ -496,9 +497,9 @@ $font-family-heading: 'Crimson Text', serif, bold, 16px;
 }
 
 .slot[data-slot="shield"] {
-  top: 120px;
-  left: 90px;
-  width: 40px;
+  top: 110px;
+  left: 110px;
+  width: 90px;
   height: 100px;
   z-index: 5;
 }
@@ -666,9 +667,9 @@ $font-family-heading: 'Crimson Text', serif, bold, 16px;
 }
 
 .edit-slot[data-slot="shield"] {
-  top: 30%;
-  left: 22%;
-  width: 10%;
+  top: 42%;
+  left: 50%;
+  width: 34%;
   height: auto;
   z-index: 5;
 }

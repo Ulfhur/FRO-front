@@ -1,5 +1,5 @@
-import { loginUser } from "./auth.js";
-import { updateHeader } from "./auth.js";
+import { loginUser, updateHeader } from "./auth.js";
+
 
 export function initLogin() {
     
@@ -7,6 +7,7 @@ export function initLogin() {
     const emailInput = document.querySelector("#EmailInput");
     const passwordInput = document.querySelector("#PasswordInput");
     const errorContainer = document.querySelector("#loginError");
+
 
     if (!form) return;
 
@@ -32,7 +33,7 @@ export function initLogin() {
            
             // Redirection to "profile" page //
 
-            window.location.hash = "/profile";
+            window.location.hash = "#/profile";
 
         } catch (error) {
             

@@ -1,3 +1,16 @@
+// FUNCTION TO GET USER ID //
+
+function getConnectedUserEmail() {
+    const token = localStorage.getItem("token");
+    if (!token) return null;
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.mail;
+    } catch (e) {
+        return null;
+    }
+}
+
 // FUNCTION TO CUSTOMISE CHARACTER WITH DRAG AND DROP //
 
 export function initCharacterCreator() {
@@ -174,7 +187,8 @@ if (!createBtn) {
       hairColor: 'black',
       face: 'standard',
       hair: 'short',
-      equipmentIds: []
+      equipmentIds: [],
+      isShared: false
     };
 
 
@@ -297,9 +311,10 @@ export async function loadCharacterDetails() {
     
     const charContainer = document.getElementById('main-edit-character');
     const inventoryContainer = document.getElementById('inventory');
+    const connectedEmail = getConnectedUserEmail();
     
     if (!charContainer || !inventoryContainer) {
-        console.warn("Containers non trouvés : vérifiez les IDs dans votre HTML.");
+        console.warn("Containers not found");
         return;
     }
     charContainer.style.width = "400px";
@@ -319,9 +334,12 @@ export async function loadCharacterDetails() {
             }
         });
 
-        if (!response.ok) throw new Error("Erreur lors de la récupération du personnage");
+        if (!response.ok) throw new Error("Error while trying to load character data");
 
         const char = await response.json();
+        console.log("Données du perso :", char); 
+        console.log("Email connecté :", connectedEmail)
+        const isOwner = char.user && char.user.mail === connectedEmail;
 
         // Set img of base character //
         charContainer.innerHTML = `
@@ -358,12 +376,22 @@ export async function loadCharacterDetails() {
                 </div>
                 <div class="d-flex flex-wrap gap-2 mt-4">
                      <a href="#/profile" class="btn btn-sm btn-outline-dark">Retour au profil</a>
+                     ${isOwner ? `
+                        <button class="my-button align-self-center" id="share-btn">Partager</button>` : ``
+                      }
                      <div class="ms-auto" id="comments-btn" style="cursor: pointer;">
                       <i class="bi bi-chat-left-dots-fill fs-4"></i>
                     </div>
                 </div>
             </div>
         `;
+
+        const shareBtn = document.getElementById('share-btn');
+        if (shareBtn) {
+            shareBtn.textContent = char.isShared ? "Ne plus partager" : "Partager";
+            if (char.isShared) shareBtn.classList.add('btn-danger');
+        }
+        toggleShareCharacter(char.isShared);
 
         document.getElementById('comments-btn')?.addEventListener('click', () => {
             openCommentsModal(char);
@@ -373,6 +401,58 @@ export async function loadCharacterDetails() {
         console.error(error);
         charContainer.innerHTML = `<p class="text-danger">Impossible de charger ce personnage.</p>`;
     }
+}
+
+// SHARE BUTTON //
+
+export async function toggleShareCharacter(currentStatus) {
+
+    const shareBtn = document.getElementById('share-btn');
+    if (!shareBtn) return;
+
+    let isCurrentlyShared = currentStatus;
+
+    shareBtn.addEventListener('click', async () => {
+        const charId = window.location.hash.split('/').pop();
+        const token = localStorage.getItem('token');
+
+        shareBtn.disabled = true;
+
+        const previousText = shareBtn.textContent;
+
+        shareBtn.textContent = "En cours...";
+
+        const newStatus = !isCurrentlyShared;
+
+        try {
+            const response = await fetch(`http://localhost:8000/api/character/${charId}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    isShared: newStatus
+                })
+            });
+
+            if (response.ok) {
+                isCurrentlyShared = newStatus;
+                alert(isCurrentlyShared ? 'Personnage partagé !' : 'Partage annulé !');
+                
+                shareBtn.textContent = isCurrentlyShared ? "Ne plus partager" : "Partager";
+                shareBtn.classList.toggle('btn-danger', isCurrentlyShared);
+            } else {
+                throw new Error();
+            }
+        } catch (error) {
+            console.error("Erreur API:", error);
+            alert("Une erreur est survenue.");
+            shareBtn.textContent = previousText;
+        } finally {
+            shareBtn.disabled = false;
+        }
+    });
 }
 
 // FUNCTION TO INITIALIZE MESSAGING PAGE //
