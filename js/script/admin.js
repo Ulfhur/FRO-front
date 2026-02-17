@@ -1,3 +1,5 @@
+import { API_URL } from "/js/config.js";
+
 // ALL FUNCTIONS FOR ADMIN PAGE //
 
 let allCharacters = [];
@@ -19,7 +21,7 @@ export async function loadAdminPage() {
 
 async function fetchCharacters(token) {
     try {
-        const response = await fetch('http://localhost:8000/api/admin/characters', {
+        const response = await fetch(`${API_URL}/admin/characters`, {
             headers: { 'Authorization': 'Bearer ' + token }
         });
         allCharacters = await response.json();
@@ -64,7 +66,7 @@ function renderCharacters() {
 
 async function fetchComments(token) {
     try {
-        const response = await fetch('http://localhost:8000/api/admin/comments', {
+        const response = await fetch(`${API_URL}/admin/comments`, {
             headers: { 'Authorization': 'Bearer ' + token }
         });
         allComments = await response.json();
@@ -120,7 +122,7 @@ function initEventListeners() {
 window.adminDeleteChar = async function(id) {
     if (!confirm("Supprimer ce héros définitivement ?")) return;
     const token = localStorage.getItem("token");
-    const response = await fetch(`http://localhost:8000/api/admin/characters/${id}`, {
+    const response = await fetch(`${API_URL}/character/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': 'Bearer ' + token }
     });
@@ -132,7 +134,7 @@ window.adminDeleteChar = async function(id) {
 window.adminDeleteComment = async function(id) {
     if (!confirm("Supprimer ce message définitivement ?")) return;
     const token = localStorage.getItem("token");
-    const response = await fetch(`http://localhost:8000/api/admin/comment/${id}`, {
+    const response = await fetch(`${API_URL}/comment/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': 'Bearer ' + token }
     });

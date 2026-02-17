@@ -1,11 +1,14 @@
+import { API_URL } from "/js/config.js";
+
 // FUNCTION TO GET USER ID //
 
 function getConnectedUserEmail() {
     const token = localStorage.getItem("token");
     if (!token) return null;
     try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        return payload.mail;
+        const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+        const payload = JSON.parse(atob(base64));
+        return payload.username || payload.mail;
     } catch (e) {
         return null;
     }
@@ -204,7 +207,7 @@ if (!createBtn) {
 
     console.log("Data sent:", defaultCharacterData);
 
-    fetch('http://localhost:8000/api/character', {
+    fetch(`${API_URL}/character`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -242,7 +245,7 @@ export async function loadUserCharacter() {
   if(!container) return;
 
   try {
-    const response = await fetch("http://localhost:8000/api/character/", {
+    const response = await fetch(`${API_URL}/character`, {
       method: "GET",
       headers: {
         "Authorization": "Bearer " + localStorage.getItem("token"),
@@ -327,7 +330,7 @@ export async function loadCharacterDetails() {
     const charId = parts[parts.length - 1];
 
     try {
-        const response = await fetch(`http://localhost:8000/api/character/${charId}`, {
+        const response = await fetch(`${API_URL}/character/${charId}`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + localStorage.getItem("token"),
@@ -426,7 +429,7 @@ export async function toggleShareCharacter(currentStatus) {
         const newStatus = !isCurrentlyShared;
 
         try {
-            const response = await fetch(`http://localhost:8000/api/character/${charId}`, {
+            const response = await fetch(`${API_URL}/character/${charId}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': 'Bearer ' + token,
@@ -493,7 +496,7 @@ export function initMessaging() {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/api/message', {
+      const response = await fetch(`${API_URL}/message`, {
         method: 'POST',
         headers: {
           'Authorization': 'Bearer ' + token,
@@ -528,7 +531,7 @@ export function initMessaging() {
 
 async function loadMessages(type) {
   const isReceived = type === 'received';
-  const url = 'http://localhost:8000/api/message';
+  const url = `${API_URL}/message`;
 
   const containerId = isReceived 
     ? 'navbarToggleExternalContentReceived' 
@@ -620,7 +623,7 @@ export async function loadUserInfo() {
     const headerUsernameEl = document.getElementById("header-username");
 
     try {
-        const response = await fetch("http://localhost:8000/api/user/me", {
+        const response = await fetch(`${API_URL}/user/me`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + localStorage.getItem("token"),
@@ -654,7 +657,7 @@ export async function loadCommunityCharacters() {
     if (!container) return;
 
     try {
-        const response = await fetch('http://localhost:8000/api/character/community', {
+        const response = await fetch(`${API_URL}/character/community`, {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
 
@@ -825,7 +828,7 @@ export async function loadTavernComments(charId) {
     if (!list) return;
 
     try {
-        const res = await fetch(`http://localhost:8000/api/comment/character/${charId}`, {
+        const res = await fetch(`${API_URL}/comment/character/${charId}`, {
             headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
         });
         
@@ -857,7 +860,7 @@ export async function loadTavernComments(charId) {
 
 export async function sendCommentToApi(data) {
     try {
-        const response = await fetch('http://localhost:8000/api/comment', {
+        const response = await fetch(`${API_URL}/comment`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

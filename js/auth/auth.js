@@ -1,8 +1,10 @@
+import { API_URL } from "/js/config.js";
+
 // Function to register a User // 
 
 export async function registerUser(email, username, password) {
 
-    const response = await fetch("http://localhost:8000/api/register", {
+    const response = await fetch(`${API_URL}/register`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -27,7 +29,7 @@ export async function registerUser(email, username, password) {
 
 export async function loginUser(email, password) {
 
-    const response = await fetch("http://localhost:8000/api/login_check", {
+    const response = await fetch(`${API_URL}/login_check`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
