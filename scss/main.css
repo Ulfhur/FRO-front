@@ -12266,7 +12266,7 @@ textarea.form-control-lg {
   height: auto;
   max-height: 400px;
   aspect-ratio: 1/1;
-  background: url(/Images/creationBackground.jpg) center/cover no-repeat;
+  background: url(../Images/creationBackground.jpg) center/cover no-repeat;
   border-radius: 8px;
   display: flex;
   justify-content: center;
@@ -12562,7 +12562,7 @@ textarea.form-control-lg {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: url("/Images/World Map.jpg");
+  background-image: url("../Images/World Map.jpg");
   background-size: cover;
   background-position: center;
   opacity: 0.6;
