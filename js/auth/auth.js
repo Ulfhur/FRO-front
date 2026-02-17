@@ -1,4 +1,4 @@
-import { API_URL } from "/js/config.js";
+import { API_URL } from "../config.js";
 
 // Function to register a User // 
 
