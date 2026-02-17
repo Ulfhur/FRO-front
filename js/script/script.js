@@ -734,7 +734,7 @@ function renderCharacters(chars) {
             <div class="character-window position-relative"> 
                 <a href="#/charDetails/${char.id}" class="full-card-link"></a>
                 <div class="character-display-container">
-                    <img src="/Images/perso.png" class="character-window-image base-body" alt="">
+                    <img src="Images/perso.png" class="character-window-image base-body" alt="">
                     ${equipmentHtml}
                 </div>
                 <ul class="character-window-text">
