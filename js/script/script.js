@@ -277,7 +277,7 @@ export async function loadUserCharacter() {
         <div class="character-window">
             <div class="character-display-container">
                 <a href="#/charDetails/${char.id}">
-                  <img src="/Images/perso.png" class="character-window-image base-body" alt="Corps">
+                  <img src="Images/perso.png" class="character-window-image base-body" alt="Corps">
                   ${equipmentHtml}
                 </a>
             </div>
@@ -299,11 +299,11 @@ export async function loadUserCharacter() {
 
 function getEquipmentImage(type) {
   const mapping = {
-    'helmet': '/Images/casquePerso.png',
-    'armor': '/Images/armurePerso.png',
-    'legs': '/Images/jambierePerso.png',
-    'weapon': '/Images/epeePerso.png',
-    'shield': '/Images/bouclierPerso.png'
+    'helmet': 'Images/casquePerso.png',
+    'armor': 'Images/armurePerso.png',
+    'legs': 'Images/jambierePerso.png',
+    'weapon': 'Images/epeePerso.png',
+    'shield': 'Images/bouclierPerso.png'
   };
   return mapping[type] || '';
 }
@@ -347,7 +347,7 @@ export async function loadCharacterDetails() {
 
         // Set img of base character //
         charContainer.innerHTML = `
-            <img src="/Images/perso.png" alt="Corps" class="edit-character">
+            <img src="Images/perso.png" alt="Corps" class="edit-character">
         `;
 
         // Set every equip item on character //
