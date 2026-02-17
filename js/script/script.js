@@ -320,7 +320,8 @@ export async function loadCharacterDetails() {
     charContainer.style.width = "400px";
     charContainer.style.height = "400px";
 
-    // Get character's ID //
+      // Get character's ID //
+
     const hash = window.location.hash;
     const parts = hash.split('/');
     const charId = parts[parts.length - 1];
@@ -478,8 +479,6 @@ export function initMessaging() {
     const recipient = recipientInput.value.trim();
     const title = titleInput.value.trim();
     const message = messageInput.value.trim();
-    
-    // On vérifie simplement si le token existe
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -510,7 +509,7 @@ export function initMessaging() {
       if (response.ok) {
         alert("Message envoyé avec succès !");
         form.reset();
-        // Rafraîchir la liste des messages envoyés
+        
         loadMessages('sent');
     
       } else {
@@ -612,13 +611,12 @@ async function loadMessages(type) {
   }
 }
 
-// Load user informations //
+// LOAD USER INFORMATIONS //
 
 export async function loadUserInfo() {
-    // Les éléments de ta page profil
+   
     const pseudoEl = document.getElementById("user-pseudo");
     const emailEl = document.getElementById("user-email");
-    // L'élément de ton header (si tu veux le mettre à jour aussi)
     const headerUsernameEl = document.getElementById("header-username");
 
     try {
@@ -630,20 +628,15 @@ export async function loadUserInfo() {
             }
         });
 
-        // Dans ton fetch de loadUserInfo
         if (!response.ok) {
             const errorData = await response.json(); 
-            console.log("LE VOICI, LE COUPABLE :", errorData.message); // <--- REGARDE TA CONSOLE F12
+            
             throw new Error(errorData.message);
         }
 
         const user = await response.json();
-
-        // Injection dans le HTML que tu m'as donné
         if (pseudoEl) pseudoEl.textContent = user.username;
         if (emailEl) emailEl.textContent = user.mail;
-        
-        // Bonus : on met aussi à jour le header pour la cohérence
         if (headerUsernameEl) headerUsernameEl.textContent = user.username;
 
     } catch (error) {
@@ -652,9 +645,9 @@ export async function loadUserInfo() {
     }
 }
 
-// Load community characters //
+// LOAD COMMUNITY CHARACTERS //
 
-let allCommunityChars = []; // On stocke les données brutes ici
+let allCommunityChars = [];
 
 export async function loadCommunityCharacters() {
     const container = document.getElementById('community-characters-container');
@@ -669,10 +662,8 @@ export async function loadCommunityCharacters() {
 
         allCommunityChars = await response.json();
         
-        // On initialise les écouteurs d'événements pour les filtres
         initFilters();
         
-        // Premier affichage
         renderCharacters(allCommunityChars);
 
     } catch (error) {
@@ -686,8 +677,6 @@ function initFilters() {
 
     const applyFilters = () => {
         let filtered = [...allCommunityChars];
-
-        // 1. Recherche par nom de perso OU nom d'utilisateur
         const search = searchInput.value.toLowerCase();
         if (search) {
             filtered = filtered.filter(char => 
@@ -696,15 +685,12 @@ function initFilters() {
             );
         }
 
-        // 2. Tri
         const sortBy = sortSelect.value;
         if (sortBy === 'name') {
             filtered.sort((a, b) => a.name.localeCompare(b.name));
         } else if (sortBy === 'comments') {
-            // Trie du plus commenté au moins commenté
             filtered.sort((a, b) => (b.commentCount || 0) - (a.commentCount || 0));
         } else {
-            // "Default" ou plus récent (tri par ID décroissant)
             filtered.sort((a, b) => b.id - a.id);
         }
 
@@ -715,7 +701,8 @@ function initFilters() {
     sortSelect.onchange = applyFilters;
 }
 
-// Fonction isolée pour dessiner les cartes
+// FUNCTION TO CREATE CHAR CARD //
+
 function renderCharacters(chars) {
     const container = document.getElementById('community-characters-container');
     container.innerHTML = "";
@@ -758,7 +745,7 @@ function renderCharacters(chars) {
     });
 }
 
-// Modal for comments and comments functions //
+// MODAL FOR COMMENT AND COMMENTARY FUNCTIONS //
 
     // Modal //
     
@@ -814,7 +801,7 @@ export async function openCommentsModal(char) {
         const commentData = {
             content: document.getElementById('comment-content').value,
             note: document.getElementById('comment-note').value,
-            characterId: char.id // Utilisation de characterId ici
+            characterId: char.id
         };
 
         const success = await sendCommentToApi(commentData);
@@ -831,7 +818,7 @@ export async function openCommentsModal(char) {
     modal.show();
 }
 
-// Load comments //
+  // Load comments //
 
 export async function loadTavernComments(charId) {
     const list = document.getElementById('comments-list');
@@ -866,11 +853,10 @@ export async function loadTavernComments(charId) {
     }
 }
 
-// Publish comment //
+  // Publish comment //
 
 export async function sendCommentToApi(data) {
     try {
-        // Suppression du "/new" pour correspondre à ton attribut PHP #[Route('', methods: ['POST'])]
         const response = await fetch('http://localhost:8000/api/comment', {
             method: 'POST',
             headers: {
@@ -883,5 +869,33 @@ export async function sendCommentToApi(data) {
     } catch (error) {
         console.error("Erreur API:", error);
         return false;
+    }
+}
+
+// FUNCTION TO LOAD ADMIN BUTTON INTO PROFILE PAGE IF USER IS ADMIN //
+
+export function showAdminButton() {
+    const container = document.getElementById('admin-access-container');
+    const token = localStorage.getItem("token");
+
+    if (!token || !container) return;
+
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const roles = payload.roles || [];
+
+        if (roles.includes('ROLE_ADMIN')) {
+            container.innerHTML = `
+                <div class="mt-4 p-3 border border-danger rounded bg-dark">
+                    <h5 class="text-danger"><i class="bi bi-shield-lock"></i> Zone Administrateur</h5>
+                    <p class="small text-white-50">Accédez aux outils de modération de la taverne.</p>
+                    <a href="#/admin" class="btn btn-danger w-100">
+                        Accéder au Dashboard Admin
+                    </a>
+                </div>
+            `;
+        }
+    } catch (e) {
+        console.error("Erreur lors de la lecture des rôles", e);
     }
 }

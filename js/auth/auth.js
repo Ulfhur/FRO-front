@@ -93,3 +93,17 @@ export function updateHeader() {
 }
 // Initialize header state immediately
 updateHeader();
+
+// Function to check if user is admin //
+
+export function isAdmin() {
+    const token = localStorage.getItem("token");
+    if (!token) return false;
+
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.roles && payload.roles.includes('ROLE_ADMIN');
+    } catch (e) {
+        return false;
+    }
+}

@@ -2,7 +2,9 @@ import Route from "./Route.js";
 import { allRoutes, websiteName } from "./allRoutes.js";
 import { initLogin } from "./auth/login.js";
 import { initRegister } from "./auth/register.js";
-import { initCharacterCreator, loadCharacterDetails, loadUserCharacter, initMessaging, loadUserInfo, loadCommunityCharacters, } from "./script/script.js";
+import { initCharacterCreator, loadCharacterDetails, loadUserCharacter, initMessaging, loadUserInfo, loadCommunityCharacters, showAdminButton } from "./script/script.js";
+import { loadAdminPage } from "./script/admin.js";
+import { isAdmin } from "./auth/auth.js";
 
 const route404 = new Route("404", "Page introuvable", "/pages/404.html");
 
@@ -18,6 +20,15 @@ const getRouteByUrl = (url) => {
 
 const LoadContentPage = async () => {
   let path = window.location.hash.slice(1) || "/";
+
+  // -ADMIN ACCESS CONTROL   //
+  if (path === "/admin") {
+      if (!isAdmin()) {
+          console.warn("STOP : Utilisateur non admin détecté ! Redirection...");
+          window.location.hash = "/"; 
+          return;
+      }
+  }
 
   // Gestion du chemin dynamique pour les détails
   let routePathToSearch = path;
@@ -41,17 +52,16 @@ const LoadContentPage = async () => {
     if (path === "/login") initLogin();
     if (path === "/createChar") initCharacterCreator();
     if (path === "/profile") {
+      showAdminButton();
       await loadUserInfo();
       await loadUserCharacter();
       await loadCommunityCharacters();
     }
     if (path === "/messaging") initMessaging();
-    
-    
-    // Si on est sur les détails (on vérifie le path réel avec l'ID)
     if (path.startsWith("/charDetails/")) {
       loadCharacterDetails();
     }
+    if (path === "/admin") loadAdminPage();
   } catch (error) {
     console.error("Erreur lors du chargement de la page:", error);
   }

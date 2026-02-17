@@ -1,0 +1,56 @@
+<div class="hero-scene text-center text-white">
+  <div class="hero-scene-content">
+    <img src="/Images/Logo.png" alt="logo" class="pt-3">
+    <h1 class="mb-4 pt-1">Hero Tavern</h1>
+    <p class="pb-4">Page Administrateur</p>
+  </div>
+</div>
+
+<div class="stylish-container mt-5">
+    <h2 class="mb-4">Héros de la communauté</h2>
+    <div class="row g-2 mb-4 align-items-end">
+        <div class="col-md-4">
+            <label class="form-label small text-white-50">Rechercher</label>
+            <input type="text" id="filter-search" class="form-control bg-dark text-white border-secondary" placeholder="Héros ou utilisateur...">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label small text-white-50">Trier par</label>
+            <select id="filter-sort" class="form-select bg-dark text-white border-secondary">
+                <option value="default">Plus récents</option>
+                <option value="name">Ordre alphabétique</option>
+            </select>
+        </div>
+    </div>       
+    <div id="admin-community-characters-container" class="row col-12 d-flex justify-content-center gap-3"></div>
+</div>
+
+<nav class="navbar-messaging navbar-primary bg-primary mt-5">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#admin-messages-collapse">
+      <h1 class="navbar-messaging-title">Modération des Messages</h1>
+      <i class="bi bi-chevron-down h2"></i>
+    </button>
+  </div>
+</nav>
+
+<div class="collapse collapse-messaging mt-0 mb-4" id="admin-messages-collapse">
+  <div class="bg-primary p-4 border-top border-white-50">
+    <div class="row g-2 mb-3">
+        <div class="col-md-8">
+            <input type="text" id="comment-search" class="form-control admin-input" placeholder="Chercher un auteur, un héros ou un mot...">
+        </div>
+        <div class="col-md-4">
+            <select id="comment-sort" class="form-select admin-input">
+                <option value="recent">Plus récents</option>
+                <option value="oldest">Plus anciens</option>
+            </select>
+        </div>
+    </div>
+    <div id="admin-comments-list"></div>
+  </div>
+</div>
+
+<div class="gentle-container pt-5 pb-5">
+    <img src="/Images/barde.png" alt="Barde" class="gentle-container-img">
+    <p class="gentle-container-text">On compte sur toi Ô Administrateur pour que l'ordre et la tranquillité règnent en ces lieux.</p>
+</div>
