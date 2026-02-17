@@ -6,7 +6,7 @@ import { initCharacterCreator, loadCharacterDetails, loadUserCharacter, initMess
 import { loadAdminPage } from "./script/admin.js";
 import { isAdmin } from "./auth/auth.js";
 
-const route404 = new Route("404", "Page introuvable", "/pages/404.html");
+const route404 = new Route("404", "Page introuvable", "./pages/404.html");
 
 const getRouteByUrl = (url) => {
   let currentRoute = null;
